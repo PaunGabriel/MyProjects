@@ -151,3 +151,8 @@ C:\Users\Gabriel\source\repos\MvcMovie\MvcMovie\obj\Debug\net5.0\Razor\Views\Mov
 C:\Users\Gabriel\source\repos\MvcMovie\MvcMovie\obj\Debug\net5.0\Razor\Views\Movies\Details.cshtml.g.cs
 C:\Users\Gabriel\source\repos\MvcMovie\MvcMovie\obj\Debug\net5.0\Razor\Views\Movies\Edit.cshtml.g.cs
 C:\Users\Gabriel\source\repos\MvcMovie\MvcMovie\obj\Debug\net5.0\Razor\Views\Movies\Index.cshtml.g.cs
+C:\Users\Gabriel\source\repos\MvcMovie\MvcMovie\obj\Debug\net5.0\Razor\Views\Users\Create.cshtml.g.cs
+C:\Users\Gabriel\source\repos\MvcMovie\MvcMovie\obj\Debug\net5.0\Razor\Views\Users\Delete.cshtml.g.cs
+C:\Users\Gabriel\source\repos\MvcMovie\MvcMovie\obj\Debug\net5.0\Razor\Views\Users\Details.cshtml.g.cs
+C:\Users\Gabriel\source\repos\MvcMovie\MvcMovie\obj\Debug\net5.0\Razor\Views\Users\Edit.cshtml.g.cs
+C:\Users\Gabriel\source\repos\MvcMovie\MvcMovie\obj\Debug\net5.0\Razor\Views\Users\Index.cshtml.g.cs

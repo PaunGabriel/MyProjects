@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MvcMovie;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,14 +21,60 @@ namespace MvcMovie.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(
+            string sortOrder,
+            string currentFilter,
+            string searchString,
+            int? pageNumber)
         {
-            return View(await _context.Movie.ToListAsync());
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewData["DateSortParm"] = sortOrder == "Date" ? "date_desc" : "Date";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var movies = from s in _context.Movie
+                select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                movies = movies.Where(s => s.Title.Contains(searchString)
+                                           || s.Genre.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    movies = movies.OrderByDescending(s => s.Title);
+                    break;
+                case "Date":
+                    movies = movies.OrderBy(s => s.ReleaseDate);
+                    break;
+                case "date_desc":
+                    movies = movies.OrderByDescending(s => s.ReleaseDate);
+                    break;
+                default:
+                    movies = movies.OrderBy(s => s.Title);
+                    break;
+            }
+
+            int pageSize = 5;
+            return View(await PaginatedList<Movie>.CreateAsync(movies.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
+
         // GET: Movies/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string Name, string Review)
         {
+
+
             if (id == null)
             {
                 return NotFound();
@@ -35,12 +82,37 @@ namespace MvcMovie.Controllers
 
             var movie = await _context.Movie
                 .FirstOrDefaultAsync(m => m.Id == id);
+
+            var reviews = _context.User.Where(p => p.Movie == movie).ToList();
+
+            if (Name != null && Review != null)
+            {
+                _context.Add(new User
+                {
+                    UserName = Name,
+                    UserReview = Review,
+                    ReviewDate = new DateTime(),
+                    Movie = movie
+                });
+
+
+                await _context.SaveChangesAsync();
+            }
+
             if (movie == null)
             {
                 return NotFound();
             }
+            if (reviews == null)
+            {
+                return NotFound();
+            }
 
-            return View(movie);
+            ModelData dtransfer = new ModelData();
+            dtransfer.movie = movie;
+            dtransfer.reviews = (ICollection<User>)reviews;
+
+            return View(dtransfer);
         }
 
         // GET: Movies/Create
